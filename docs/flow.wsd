@@ -1,0 +1,31 @@
+@startuml flow
+package "flow" {
+    component "api" {
+    }
+    database "storage" {
+        component DB{
+        }
+        component ODPS{
+        }
+        component FILE{
+        }
+    }
+    component "scheduler" {
+    }
+}
+package worker {
+    component agent {
+    }
+    component fifo {
+    }
+    component processor {
+    }
+    agent -left-> fifo: 3.write to fifo
+    processor -left-> fifo: 4.read
+    processor -> storage: 5.write result
+}
+api -right-> scheduler:call
+agent -up-> storage : 2.read data
+scheduler -down-> worker: 1.docker run
+processor -up-> api: 6.job done
+@enduml
